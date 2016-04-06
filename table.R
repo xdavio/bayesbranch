@@ -1,0 +1,5 @@
+heights <- c(62.5,  64.0,  64.5,  66.5,  67.0,  68.5)
+quant <- qnorm((1:6 - 1/2) / 6)
+pdf("plot.pdf")
+plot(heights~quant, ylab="Heights",xlab="Z Quantiles",main="Normal Probability Plot")
+dev.off()

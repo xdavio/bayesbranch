@@ -1,0 +1,195 @@
+ \documentclass[11 pt]{article}
+\usepackage{amssymb,amsmath, amsthm, graphics, subfig, listings, graphicx}
+%\usepackage{natbib}
+%formatting that is good for editing (it double spaces)
+\renewcommand{\baselinestretch}{1.4}
+\textwidth 6in \textheight 9in \hoffset -0.30in \topmargin -0.45in
+\interfootnotelinepenalty=10000 %keeps footnotes on a single page
+
+%comment out
+%----------------------
+\newcommand{\commentout}[1]{}
+%--------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%PART I. GENERAL COMMANDS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% I. NUMBERING AND ENVIRONMENTS FOR THEOREMS, PROPOSITIONS, LEMMAS, AND EQUATIONS
+
+%A. Actual Theorems
+\newtheorem{ass}{Assumption}
+\newtheorem{prop}{Proposition}
+\newtheorem{fact}{Fact}
+\newtheorem{lem}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{con}{Conjecture}
+\newtheorem{defn}{Definition} %use \textbf{} to set it off
+\newtheorem{rem}{Remark}
+\newtheorem{rec}{Recall}
+\newtheorem{problem}{Problem}
+\newtheorem{example}{Example}
+\newtheorem{note}{Note}
+\newtheorem{question}{Question}
+\newtheorem{ques}{\textcolor{red}{Question}}
+\newtheorem{com}{\textcolor{red}{Comment}}
+\newtheorem{todo}{\textcolor{red}{To Do}}
+
+%B. Special Referencing
+
+%B1. Built in ones
+
+%1. \eqref (equations, in standard package)
+ %%2. in commath:
+%a)\thmref
+%b)\exref (example)
+%c) \defnref
+%d) \lemref
+%e)\propref
+%f)\remref
+%g)\assref
+%h)\colref - corollary
+%also figures, section, appendix
+
+%B2. I try to define
+%1. fact KEY need dollar signs for it work $\factref{fact:varW}$
+\newcommand{\factref}[1]{ \text{Fact~\ref{#1}} }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Bold Greek
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\bbeta{\mbox{\boldmath $\beta$}}
+\def\bmu{\mbox{\boldmath $\mu$}}
+\def\etab{\mbox{\boldmath $\eta$}}
+\def\balpha{\mbox{\boldmath $\alpha$}}
+\def\btau{\mbox{\boldmath $\tau$}}
+\def\bDelta{\mbox{\boldmath $\Delta$}}
+\def\bGamma{\mbox{\boldmath $\Gamma$}}
+\def\bgamma{\mbox{\boldmath $\gamma$}}
+\def\bOmega{\mbox{\boldmath $\Omega$}}
+\def\bPsi{\mbox{\boldmath $U$}}
+\def\bpsi{\mbox{\boldmath $\mu$}}
+\def\bXi{\mbox{\boldmath $\Xi$}}
+\def\bxi{\mbox{\boldmath $\xi$}}
+\def\bSigma{\mbox{\boldmath $\Sigma$}}
+\def\bLambda{\mbox{\boldmath $\Lambda$}}
+\def\btheta{\mbox{\boldmath $\theta$}}
+\def\bDelta{\mbox{\boldmath $\Delta$}}
+\def\bTheta{\mbox{\boldmath $\Theta$}}
+\def\etaz{\mbox{\boldmath $\eta$}}
+
+\def\boldX{\mbox{\boldmath $X$}}
+\def\boldx{\mbox{\boldmath $X$}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% III. SHORTCUTS
+
+%A. Greek symbols
+\newcommand{\be}{\begin{eqnarray*}}
+\newcommand{\ee}{\end{eqnarray*}}
+\newcommand{\ff}{\infty}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\ep}{\epsilon}
+\newcommand{\ga}{\gamma}
+\newcommand{\al}{\alpha}
+\newcommand{\la}{\lambda}
+\newcommand{\si}{\sigma}
+\renewcommand{\th}{\theta}
+\newcommand{\Epos}{E_{\theta|\boldX}}
+\newcommand{\Ej}{E_{\theta,\boldX}}
+%B. Other Math Symbols
+
+%1. transpose, you want a consistent use, bc you could use t,T or \prime
+\def\tran{\mathop{ t }}
+
+%C. Commands
+\newcommand{\xra}[1]{\mathop{ \xrightarrow{#1} }}
+
+%D. Fences puts items in the correct fence sizes (parantheses, brackets, etc..)
+% (get rid of? look at commath package?)
+%fp = fence parentheses
+\newcommand{\fp}[1]{ \mathop{ \left( #1 \right) } }
+%fb = fence brackets
+\newcommand{\fb}[1]{ \mathop{ \left[ #1 \right] } }
+%fbr = fence braces meaning \{
+\newcommand{\fbr}[1]{ \mathop{ \left\{ #1 \right\} } }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%V. Other Commands
+
+ %command that is called by \Title{Text} and this centers it.
+\newcommand{\Title}[1]{\begin{center}{\Large \bf #1} \end{center}}
+\newcommand{\hype}[1]{\mathcal{H}_{#1}}
+\newcommand{\pval}{\text{pvalue}}
+\newcommand{\sediff}{\text{SE}_{\bar{Y}_1 - \bar{Y}_2}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%END PART I
+
+\newcommand{\fth}{f_{\th}}
+
+\begin{document}
+\Title{Technical Notes for Bayesian MHDE Brood Size Sampling}
+
+\Title{John Davis, Bret Hanlon}
+
+
+Let the $H$-posterior be given by
+\[
+P(\th | g_n) \propto \exp \fbr{ -n H(\fth,g_n) } \pi(\th)
+\]
+where
+\begin{itemize}
+  \item $\pi$ is the prior
+  \item $g_n$ is the density estimator given by
+\[
+g_n(x) = \left ( \sum_{i=1}^n X_i^{-1} \right )^{-1} \sum_{i=1}^n \frac{1(X_i=x)}{x}, \text{ and}
+\]
+  \item $\fth$ is the power series offspring distribution with support $1,2,...$.
+\end{itemize}
+Following (hooker), 
+\[
+H(\fth,g_n) = \int G(\delta) \fth
+\]
+where $\delta = g_n / \fth - 1$. It is required that $G(0)=0, G'(0)=0, G''(0)=1$. Some algebra demonstrates that in the case of the Hellinger Distance, 
+\[
+G(\delta) = 2[(\delta + 1)^{1/2} - 1]^2
+\]
+and
+\[
+G(\delta)\fth = 4 - 4 \sum \sqrt{\fth g_n}.
+\]
+Let $\bar{n}$ be the number of unique values in the sample of brood sizes $X_1,...,X_n$. Enumerate these unique values by $X'_1,..., X'_{\bar{n}}$. Let $n_j = \sum_{i=1}^n 1(X'_j = X_i)$. Noting $g_n(x)$ is positive only on $X'_j$, we can then write
+\begin{align*}
+-n HD(g_n,\fth) &= 4n \fbr{ \sum_x \sqrt{\fth g_n} - 1 } \\
+&= 4n \fbr{ \sum_x \sqrt{\fth \left ( \sum_{i=1}^n X_i^{-1} \right )^{-1} \sum_{i=1}^n \frac{1(X_i=x)}{X_i} } - 1 } \\
+&= 4n \fbr{ \sum_{j=1}^{\bar{n}} \sqrt{\fth   \frac{ n_j(X'_j)^{-1}}{\sum_{k=1}^{\bar{n}} n_k (X'_k)^{-1}} }   - 1 }. \\
+\end{align*}
+This admits alternative expressions for the $H$-posterior:
+\[
+P(\th | g_n ) \propto \exp \fbr{ 4n \sum_{j=1}^{\bar{n}} \sqrt{\fth   \frac{ n_j(X'_j)^{-1}}{\sum_{k=1}^{\bar{n}} n_k (X'_k)^{-1}} } } \pi(\th)
+\]
+and
+\[
+P(\th | g_n ) \propto \left \{ \Pi_{j=1}^{\bar{n}}  \exp \fbr{ \fth   \frac{ n_j(X'_j)^{-1}}{\sum_{k=1}^{\bar{n}} n_k (X'_k)^{-1} } } \right \}^{2n} \pi(\th) 
+\]
+
+\section*{Metropolis-Hastings Algorithm}
+
+Define the jump function
+\[
+J(\th|\th') = logit^{-1}(N(\th',C^2))
+\]
+where $C$ is a tuning parameter and $N$ is the pdf of a normal distribution with mean $\th'$ and variance $C^2$. Then, accept proposed jump $\th \sim J(\cdot | \th')$ with probability 
+\[
+\min \fbr{ \frac{P(\th|g_n) J(\th'|\th)}{P(\th'|g_n) J(\th|\th')}  , 1 }
+\]
+
+
+\end{document}

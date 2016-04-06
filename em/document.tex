@@ -1,0 +1,254 @@
+ \documentclass[11 pt]{article}
+\usepackage{amssymb,amsmath, amsthm, graphics, subfig, listings, graphicx}
+%\usepackage{natbib}
+%formatting that is good for editing (it double spaces)
+\renewcommand{\baselinestretch}{1.4}
+\textwidth 6in \textheight 9in \hoffset -0.30in \topmargin -0.45in
+\interfootnotelinepenalty=10000 %keeps footnotes on a single page
+
+%comment out
+%----------------------
+\newcommand{\commentout}[1]{}
+%--------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%PART I. GENERAL COMMANDS
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% I. NUMBERING AND ENVIRONMENTS FOR THEOREMS, PROPOSITIONS, LEMMAS, AND EQUATIONS
+
+%A. Actual Theorems
+\newtheorem{ass}{Assumption}
+\newtheorem{prop}{Proposition}
+\newtheorem{fact}{Fact}
+\newtheorem{lem}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{thm}{Theorem}
+\newtheorem{cor}{Corollary}
+\newtheorem{con}{Conjecture}
+\newtheorem{defn}{Definition} %use \textbf{} to set it off
+\newtheorem{rem}{Remark}
+\newtheorem{rec}{Recall}
+\newtheorem{problem}{Problem}
+\newtheorem{example}{Example}
+\newtheorem{note}{Note}
+\newtheorem{question}{Question}
+\newtheorem{ques}{\textcolor{red}{Question}}
+\newtheorem{com}{\textcolor{red}{Comment}}
+\newtheorem{todo}{\textcolor{red}{To Do}}
+
+%B. Special Referencing
+
+%B1. Built in ones
+
+%1. \eqref (equations, in standard package)
+ %%2. in commath:
+%a)\thmref
+%b)\exref (example)
+%c) \defnref
+%d) \lemref
+%e)\propref
+%f)\remref
+%g)\assref
+%h)\colref - corollary
+%also figures, section, appendix
+
+%B2. I try to define
+%1. fact KEY need dollar signs for it work $\factref{fact:varW}$
+\newcommand{\factref}[1]{ \text{Fact~\ref{#1}} }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Bold Greek
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\def\bbeta{\mbox{\boldmath $\beta$}}
+\def\bmu{\mbox{\boldmath $\mu$}}
+\def\etab{\mbox{\boldmath $\eta$}}
+\def\balpha{\mbox{\boldmath $\alpha$}}
+\def\btau{\mbox{\boldmath $\tau$}}
+\def\bDelta{\mbox{\boldmath $\Delta$}}
+\def\bGamma{\mbox{\boldmath $\Gamma$}}
+\def\bgamma{\mbox{\boldmath $\gamma$}}
+\def\bOmega{\mbox{\boldmath $\Omega$}}
+\def\bPsi{\mbox{\boldmath $U$}}
+\def\bpsi{\mbox{\boldmath $\mu$}}
+\def\bXi{\mbox{\boldmath $\Xi$}}
+\def\bxi{\mbox{\boldmath $\xi$}}
+\def\bSigma{\mbox{\boldmath $\Sigma$}}
+\def\bLambda{\mbox{\boldmath $\Lambda$}}
+\def\btheta{\mbox{\boldmath $\theta$}}
+\def\bDelta{\mbox{\boldmath $\Delta$}}
+\def\bTheta{\mbox{\boldmath $\Theta$}}
+\def\etaz{\mbox{\boldmath $\eta$}}
+
+\def\boldX{\mbox{\boldmath $X$}}
+\def\boldx{\mbox{\boldmath $X$}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% III. SHORTCUTS
+
+%A. Greek symbols
+\newcommand{\be}{\begin{eqnarray*}}
+\newcommand{\ee}{\end{eqnarray*}}
+\newcommand{\ff}{\infty}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\ep}{\epsilon}
+\newcommand{\ga}{\gamma}
+\newcommand{\al}{\alpha}
+\newcommand{\la}{\lambda}
+\newcommand{\si}{\sigma}
+\renewcommand{\th}{\theta}
+\newcommand{\Epos}{E_{\theta|\boldX}}
+\newcommand{\Ej}{E_{\theta,\boldX}}
+%B. Other Math Symbols
+
+%1. transpose, you want a consistent use, bc you could use t,T or \prime
+\def\tran{\mathop{ t }}
+
+%C. Commands
+\newcommand{\xra}[1]{\mathop{ \xrightarrow{#1} }}
+
+%D. Fences puts items in the correct fence sizes (parantheses, brackets, etc..)
+% (get rid of? look at commath package?)
+%fp = fence parentheses
+\newcommand{\fp}[1]{ \mathop{ \left( #1 \right) } }
+%fb = fence brackets
+\newcommand{\fb}[1]{ \mathop{ \left[ #1 \right] } }
+%fbr = fence braces meaning \{
+\newcommand{\fbr}[1]{ \mathop{ \left\{ #1 \right\} } }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%V. Other Commands
+
+ %command that is called by \Title{Text} and this centers it.
+\newcommand{\Title}[1]{\begin{center}{\Large \bf #1} \end{center}}
+\newcommand{\hype}[1]{\mathcal{H}_{#1}}
+\newcommand{\pval}{\text{pvalue}}
+\newcommand{\sediff}{\text{SE}_{\bar{Y}_1 - \bar{Y}_2}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%END PART I
+
+\newcommand{\fth}{f_{\th}}
+\newcommand{\fths}{f_{\th,s}}
+
+\begin{document}
+\Title{EM algorithm for brood size sampling.}
+
+\Title{John Davis, Bret Hanlon}
+
+\section{Setup}
+Let $X$ be the sampled brood size vector for a draw of size $n$ from one generation of a branching process with a shifted power series offspring distribution denoted by $\fth$. The size-biased data $X$ follow a related distribution $\fths$ when no single family is duplicated in the sample. 
+
+The data are thus approximately 
+\[
+\Pi_{i=1}^n \fths(x_i).
+\]
+We can re-represent the data vector $X$ as 
+\[
+(X_1,...,X_n) = (Y_i,n_i : i=1,...,\bar{n})
+\]
+where $Y_i$ is the unique values $X$ takes, $n_i$ is the number of such values for a particular $Y_i$, and $\bar{n}$ is the number of unique values of $X$. Suppose, now, that we observe the number of distinct families that compose each pair $(Y_i,n_i)$. Let this number be $Z_i$. Evidently
+\[
+Z_i \in S_i:= \fbr{ [n_i / y_i],...,n_i},
+\]
+where $[\cdot]$ denote the ceiling function.  Then, 
+\[
+P(X|Z,\th) = \Pi_{i=1}^{\bar{n}} \fths^{Z_i}(Y_i)
+\]
+exactly instead of
+\[
+\Pi_{i=1}^{\bar{n}} \fths^{n_i}(Y_i)
+\]
+which is incorrect because of the possibility of resampling the same family. Note that this doesn't account for the problem that the sampling is done with respect to a finite population.  Assume a uniform prior in the support of $S_i$ for $Z_i$. Then
+\[
+P(Z_i|X,\th) = P(Z_i|Y_i,n_i,\th) \propto P(Y_i|Z_i,n_i,\th) = \fths^{Z_i}(Y_i)
+\]
+with normalization constant $A_i$, say.
+
+For the remainder of this document, for simplicity, we assume that the offspring distribution follows a shifted geometric distribution, given by
+% #likelihood of shifted geometric
+% model.likelihood = function(x,theta) {
+%   #hardcoded geometric dist shifted by +1
+%   return(theta^(x)*(1-theta)/theta)
+% }
+
+% model.likelihood.s = function(x,theta) {
+%   #hardcoded geometric dist shifted by +1
+%   return( x * theta^x * (1 - theta)^2 / theta )
+% }
+\[
+\fth(x) = \th^{x -1} (1 - \th),
+\]
+and its size-biased version is given by
+\[
+\fths(x) = x \th^{x - 1} (1 - \th)^2
+\]
+
+\section{EM Algorithm}
+
+\subsection{EM Algorithm for the Size-Biased Distribution}
+
+Let
+\[
+Q(\th | \th_i) = E_{Z|X,\th_i} \log L(\th,X,Z)
+\]
+where $\th_i$ is the parameter value of the previous iteration. Here,
+\[
+L(\th,X,Z) = L(X | \th, Z) L(Z | \th) \propto L(X | \th, Z).
+\] 
+Again, we have the problem of setting the prior on $Z$ to be uniform; in other words, we ignore the distribution $P(Z | \th)$ and $P(Z | X, \th)$ whenever possible.
+
+
+Then maximize $Q(\th|\th_i)$ and set $\th_{i+1}$ equal to the maximizer. Repeat this until convergence.
+
+The explicit form of $Q$ is given here
+\[
+Q(\th | \th_i) = \sum_{j=1}^{\bar{n}} \sum_{z \in S_j} z \log \fths (y_i) f^z_{\th_i,s}(y_i) / A_i.
+\]
+This is the expectation calculation when we assume that the $Z | X, \th$ is uniform on the support of $Z_i$, denoted by $S_i$.
+
+
+\section{Gibbs Sampler}
+
+The EM algorithm is somehwat artlessly applied because it ignores two problems: (1) the population size is finite, and (2) the number of unique families $Z$ is not uniform on its support. A hierarchical model is proposed which allows for an exact calculation of the distribution of $Z_i$. Suppose brood-sized sampling in a branching process with two generations, parent and child. In the parent generation, assume $N$ objects. Assume a sample of size $n$ from the child generation, and re-write the sample as before using $(Y_i,n_i : i=1,...,\bar{n})$. Then consider the following model:
+\begin{align*}
+\th &\sim Beta(\alpha, \beta) \\
+(Y_i, n_i) = (X_1,...,X_n) | Z_i, \th &\sim \Pi_{i=1}^{\bar{n}} \fths^{Z_i}(Y_i) \\
+Z_i | N, Y_i, n_i, \th &\sim H(Z_i | N, Y_i, n_i, \th)
+\end{align*}
+where $N$ is estimated. We define $H$ now. Consider one of the values $Y_i$, which appeared $n_i$ times in the sample. The number of unique parent families for these $n_i$ values is given by $S_i$. We also know there are at least $Y_i  Z_i$ parent nodes giving off the value $Y_i$. Given this collection of parent nodes (perhaps there are $N_i$ of them), the distribution of $Z_i$ is related the the multivariate hypergemetric distribution. Each parent taking the value $Y_i$ should be regarded as a different color, with number of balls equal to $Y_i$. Then draw $n_i$ balls and count the number of colors. This is the value of $Z_i$, and $H$ is the corresponding conditional probability distribution. 
+
+The Gibbs sampler uses an iteration step on the full conditional probabilities, which are derived here.
+
+\begin{itemize}
+  \item First, we need
+\begin{align*}
+P(\th | Y_i, Z_i) = P(Y_i, Z_i | \th) P(\th) = P(Y_i | Z_i, \th) P(Z_i | \th) P(\th)
+\end{align*}
+I assume that $Z$ and $\th$ are independent, giving
+\begin{equation} \label{firstcond}
+P(\th | Y_i, Z_i) = Beta(\alpha + \sum_{i = 1}^{\bar{n}} Z_i(Y_i - 1), \beta + 2 \sum_{i = 1}^{\bar{n}} Z_i)
+\end{equation}
+
+ \item Second, we need the parent generation given the rest of the parameters. Denote the number of offspring of each parent by $O_1,...,O_N$. Certainly these $O_i$ will, in part, be made up of $Z_1$ of $Y_1$, $Z_2$ of $Y_2$, and so on. The remaining $N - \sum_i^{\bar{n}}Z_i$ are drawn from $\fth$.
+
+We could alternatively (and perhaps more accurately) write
+\begin{align*}
+P(\th | Y, Z, O) = P(\th | O) = P(O | \th) P(\th) = \\\Pi_{i = 1}^N \fth(o_i) \times Beta(\alpha,\beta) = Beta(\alpha + \sum O_i - N, \beta + N)
+\end{align*}
+instead of Equation \eqref{firstcond}.
+
+ \item Third, we need
+\[
+P(Z_i | Y_i, \th, O_i).
+\]
+This is, as described before, related to the multivariate hypergeometric distribution. In particular, draw $n_i$ balls from an urn with $\sum_j O_j 1(O_j = Y_i)$ balls in it. The nonzero terms of the sum give the number of balls of each color. Then $Z_i$ is the number of colors in the sample. 
+\end{itemize}
+
+Using a Gibbs sampler on the condition probabilities above, we can obtain the posterior for $\th$. 
+
+\end{document}

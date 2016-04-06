@@ -1,40 +1,40 @@
 #this is a newer version of em.R which takes data files from data and does broader analysis.
-
 #latent variable analysis
 
+source("utils.R") #this line replaces, I hope, the commented section below.
 #functions
-offspring = function(x) {
-  rgeom(1,1-theta)+1
-}
+## offspring = function(x) {
+##   rgeom(1,1-theta)+1
+## }
 
-model.likelihood = function(x,theta) {
-  #likelihood of shifted geometric
-  #hardcoded geometric dist shifted by +1
-  return(theta^(x)*(1-theta)/theta)
-}
+## model.likelihood = function(x,theta) {
+##   #likelihood of shifted geometric
+##   #hardcoded geometric dist shifted by +1
+##   return(theta^(x)*(1-theta)/theta)
+## }
 
-model.likelihood.s = function(x,theta) {
-  #hardcoded geometric dist shifted by +1
-  return( x * theta^x * (1 - theta)^2 / theta )
-}
+## model.likelihood.s = function(x,theta) {
+##   #hardcoded geometric dist shifted by +1
+##   return( x * theta^x * (1 - theta)^2 / theta )
+## }
 
-sample.tree = function(tree,M=5) {
-  N = length(tree) #number of generations
-  #subsample size
+## sample.tree = function(tree,M=5) {
+##   N = length(tree) #number of generations
+##   #subsample size
 
-  #don't sample the first generation
-  foo.brood = array(0,c(N-1,M))
-  for (i in 2:N) {
-    foo = tree[[i]]
-    if (sum(foo) < 3) {
-      foo.brood[i-1,]=0
-    } else {
-      foo.brood[i-1,]=sample(rep(foo,foo),M)
-    }
-  }
+##   #don't sample the first generation
+##   foo.brood = array(0,c(N-1,M))
+##   for (i in 2:N) {
+##     foo = tree[[i]]
+##     if (sum(foo) < 3) {
+##       foo.brood[i-1,]=0
+##     } else {
+##       foo.brood[i-1,]=sample(rep(foo,foo),M)
+##     }
+##   }
 
-  foo.brood
-}
+##   foo.brood
+## }
 
 expectation <- function(theta.new,theta.old,s,n,y,n.i,l,z) {
     #the expectation upon which optimization is computed for EM alg
@@ -88,16 +88,40 @@ build.em <- function(file) {
     return(environment())
 }
 
+
+################
+## Runs the script
+################
 envs <- list() #holds the environment with each data file.
 for (i in 1:length(files.envname)) {
     envs[[files.envname[i]]] <- build.em(files[[i]])
 }
 
 
+##plotting function
+require(ggplot2)
+require(plyr)
+require(dplyr)
+
+#make everything long
+#extract features
+features = matrix(as.numeric(unlist(sapply(files.envname, function(x) strsplit(x, "\\.")))),length(files),2,byrow=T)
+features[,1] <- features[,1] / 10
+
+noenvs = length(envs)
+noobs = length(envs[[1]]$theta.em)
+df = data.frame(th = rep(NA, noenvs * noobs),
+                para = rep(NA, noenvs * noobs),
+                n = rep(NA, noenvs * noobs))
+                
+for (i in 1:noenvs) {
+    print(features[i,])
+    start = (i - 1) * noobs + 1
+    end = i * noobs
+    df$th[start:end] = envs[[i]]$theta.em
+    df$para[start:end] = rep(features[i,1], noobs)
+    df$n[start:end] = rep(features[i,2], noobs)
+}
 
 
-
-    
-
-
-
+ggplot(df, aes(x = th)) + geom_histogram() + facet_grid(para ~n)

@@ -7,7 +7,7 @@ require(dplyr)
 require(xtable)
 
 
-gibbs.sampler <- function(t, g = 1, alpha = 1, beta = 1, M = 5, P = 10000) {
+gibbs.sampler <- function(t, g = 1, alpha = 1, beta = 1, M = 5, P = 10000, hush = FALSE) {
     #pass this function a tree. it'll sample it and then do gibbs sampling. 
 
     #M - sample size
@@ -63,7 +63,9 @@ gibbs.sampler <- function(t, g = 1, alpha = 1, beta = 1, M = 5, P = 10000) {
             z.[i] <- f
         }
 
-        print(z.)
+        if (hush == FALSE) {
+            print(z.)
+        }
 
         #o given the rest
         o <- c(rep(y,z.), replicate(N - sum(z.),offspring(th)) )
@@ -167,3 +169,31 @@ make.df <- function(data) {
     df
 }
 
+make.plot <- function(df, loc) {
+    ggplot(df, aes(x = th)) +
+        geom_histogram() +
+        facet_grid(n ~ para) +
+        xlab("Theta") +
+        ylab("Count") +
+        ggtitle("Histogram of Posterior of Theta")
+    ggsave(loc)
+}
+
+
+make.summary <- function(df) {
+    df.sum = df %>%
+        transform(bias = th - para) %>%
+        group_by(para,n) %>%
+        summarize(mean = mean(th),
+                  sd = sd(th),
+                  bias = mean(bias),
+                  mse = mean(bias^2) + var(th))
+
+    df.sum
+}
+
+sink.it <- function(df, loc) {
+    sink(file = loc)
+    print(xtable(df), include.rownames = FALSE)
+    sink()
+}

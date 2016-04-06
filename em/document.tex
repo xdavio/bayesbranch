@@ -136,7 +136,7 @@
 \newcommand{\fths}{f_{\th,s}}
 
 \begin{document}
-\Title{EM algorithm for brood size sampling.}
+\Title{EM algorithm and Gibbs Sampler for brood size sampling.}
 
 \Title{John Davis, Bret Hanlon}
 
@@ -214,6 +214,8 @@ This is the expectation calculation when we assume that the $Z | X, \th$ is unif
 
 \section{Gibbs Sampler}
 
+\subsection{Introduction}
+
 The EM algorithm is somehwat artlessly applied because it ignores two problems: (1) the population size is finite, and (2) the number of unique families $Z$ is not uniform on its support. A hierarchical model is proposed which allows for an exact calculation of the distribution of $Z_i$. Suppose brood-sized sampling in a branching process with two generations, parent and child. In the parent generation, assume $N$ objects. Assume a sample of size $n$ from the child generation, and re-write the sample as before using $(Y_i,n_i : i=1,...,\bar{n})$. Then consider the following model:
 \begin{align*}
 \th &\sim Beta(\alpha, \beta) \\
@@ -240,7 +242,7 @@ We could alternatively (and perhaps more accurately) write
 \begin{align*}
 P(\th | Y, Z, O) = P(\th | O) = P(O | \th) P(\th) = \\\Pi_{i = 1}^N \fth(o_i) \times Beta(\alpha,\beta) = Beta(\alpha + \sum O_i - N, \beta + N)
 \end{align*}
-instead of Equation \eqref{firstcond}.
+instead of Equation \eqref{firstcond}. This method, however, does not result in a trustworthy posterior based on simulation studies. 
 
  \item Third, we need
 \[
@@ -249,6 +251,21 @@ P(Z_i | Y_i, \th, O_i).
 This is, as described before, related to the multivariate hypergeometric distribution. In particular, draw $n_i$ balls from an urn with $\sum_j O_j 1(O_j = Y_i)$ balls in it. The nonzero terms of the sum give the number of balls of each color. Then $Z_i$ is the number of colors in the sample. 
 \end{itemize}
 
-Using a Gibbs sampler on the conditional probabilities above, we can obtain the posterior for $\th$. Several posteriors are shown below, along with some summary statistics. 
+\subsection{Simulation Study}
+
+A Gibbs sampler can use the scheme described in the previous section in order to obtain a posterior distribution for $\th$. With 1000 Gibbs sampler iterations (discarding the first 800 as a burn-in), a shifted geometric offspring distribution, with sample size equal to 10, several settings of tree size and underlying parameter value were examined in terms of bias, standard deviation, and mean squared error.
+
+
+\input{../gibbstable.tex}
+
+\begin{center}
+\includegraphics[width = .99\textwidth]{../gibbs.pdf}
+\end{center}
+
+\subsection{Sensitivity to Hyperparameters}
+
+This section examines the sensitivity of the MSE to the choice of the hyperparameters $\alpha$ and $\beta$. 
+
 
 \end{document}
+

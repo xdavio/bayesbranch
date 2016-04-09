@@ -136,7 +136,7 @@
 \newcommand{\fths}{f_{\th,s}}
 
 \begin{document}
-\Title{EM algorithm and Gibbs Sampler for brood size sampling.}
+\Title{Bayesian Computational Methods for Size-Biased Sampling in a Branching Process}
 
 \Title{John Davis, Bret Hanlon}
 
@@ -211,6 +211,20 @@ Q(\th | \th_i) = \sum_{j=1}^{\bar{n}} \sum_{z \in S_j} z \log \fths (y_i) f^z_{\
 \]
 This is the expectation calculation when we assume that the $Z | X, \th$ is uniform on the support of $Z_i$, denoted by $S_i$.
 
+\subsection{Simulation Study}
+
+Several initial generation sizes and values of $\th$ were picked to simulate realizations of a branching process for one generation. Samples of size 10 were taken from each, and the EM algorithm was used to calculate the best estimate of $\th$. This was repeated 1000 times, producing histograms in Figure \ref{fig:em}. The following table shows the results of this simulation study:
+\input{../emtable.tex}
+
+
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width = .99\textwidth]{../emplot.pdf}
+\caption{This figure shows the histogram of the estimated $\th$ found using the EM algorithm. Various initial tree sizes ($n$) and true values of $\th$ (para) are explored. The algorithm appears to a decent job of approximating the true $\th$.}
+\label{fig:em}
+\end{center}
+\end{figure}
 
 \section{Gibbs Sampler}
 
@@ -253,19 +267,37 @@ This is, as described before, related to the multivariate hypergeometric distrib
 
 \subsection{Simulation Study}
 
-A Gibbs sampler can use the scheme described in the previous section in order to obtain a posterior distribution for $\th$. With 1000 Gibbs sampler iterations (discarding the first 800 as a burn-in), a shifted geometric offspring distribution, with sample size equal to 10, several settings of tree size and underlying parameter value were examined in terms of bias, standard deviation, and mean squared error.
+A Gibbs sampler can use the scheme described in the previous section in order to obtain a posterior distribution for $\th$. With 1000 Gibbs sampler iterations (discarding the first 800 as a burn-in), a shifted geometric offspring distribution, with sample size equal to 10, several settings of tree size and underlying parameter value were examined in terms of bias, standard deviation, and mean squared error. The hyperparameters are set to $\alpha = \beta = 1$
 
 
 \input{../gibbstable.tex}
 
+
+\begin{figure}[!h]
 \begin{center}
 \includegraphics[width = .99\textwidth]{../gibbs.pdf}
+\caption{This graph shows the posterior distribution of $\th$ for various choices of simulation parameters using the Gibbs Sampler.}
+\label{fig:gibbs}
 \end{center}
+\end{figure}
+
 
 \subsection{Sensitivity to Hyperparameters}
 
-This section examines the sensitivity of the MSE to the choice of the hyperparameters $\alpha$ and $\beta$. 
+This section examines the sensitivity of the MSE to the choice of the hyperparameters $\alpha$ and $\beta$. Several choices of $\alpha$ and $\beta$ are chosen for the prior distribution of $\th$. Considering a geometric offspring distribution with 10 initial nodes, a sample of size 10 on the subsequent generation in analyzed in terms of MSE and choice of hyperparameter. The true value of $\th$ is 0.8. The results follow:
 
+\input{../sensitivity.tex}
+
+A heatmap of these choices is also available.
+
+\begin{figure}[!h]
+\begin{center}
+\label{fig:heatmap}
+\caption{See above the heatmap of choice of hyperparameter assessed by MSE. It appears that larger values of $\alpha$ and smaller values of $\beta$ are best.}
+\includegraphics[width = .99\textwidth]{../heatmap.pdf}
+\end{center}
+
+\end{figure}
 
 \end{document}
 

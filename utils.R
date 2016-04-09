@@ -1,5 +1,5 @@
 require("BiasedUrn") #need this for multivariate hypergeometric distribution
-
+require("xtable")
 #functions
 offspring = function(theta) {
   rgeom(1,1-theta)+1
@@ -55,4 +55,11 @@ get.files <- function() {
     return(list(files = files,
                 files.envname = files.envname,
                 features = features))
+}
+
+
+sink.it <- function(df, loc) {
+    sink(file = loc)
+    print(xtable(df), include.rownames = FALSE)
+    sink()
 }
